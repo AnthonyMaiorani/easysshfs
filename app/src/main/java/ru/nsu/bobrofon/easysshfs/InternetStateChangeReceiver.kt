@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.NetworkInfo
-import android.net.wifi.WifiManager
+import android.net.ConnectivityManager
 import android.os.Handler
 import android.util.Log
 import androidx.core.content.IntentCompat
@@ -23,33 +23,21 @@ class InternetStateChangeReceiver(
     private val shell: Shell by lazy { EasySSHFSActivity.initNewShell() }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (WifiManager.NETWORK_STATE_CHANGED_ACTION != intent.action) {
-            return
-        }
-
-        Log.d(TAG, "network state changed")
-
-        val info = IntentCompat.getParcelableExtra(
-            intent,
-            WifiManager.EXTRA_NETWORK_INFO,
-            NetworkInfo::class.java
-        )
-        if (info == null) {
-            Log.w(TAG, "failed to get wifi network info from intent '$intent'")
-            return
-        }
-
         val mountPointsList = MountPointsList.instance(context)
-
-        handler.removeCallbacksAndMessages(null) // ignore repeated intents
-        if (info.isConnected) {
-            Log.d(TAG, "network is connected")
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager.activeNetworkInfo
+    
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+            Log.d(TAG, "Network is connected")
+            // Handle network connected state, either WiFi or Ethernet
             handler.postDelayed({ autoMount(mountPointsList, shell) }, AUTO_MOUNT_DELAY_MILLIS)
         } else {
-            Log.d(TAG, "unmount everything")
+            Log.d(TAG, "No network connection")
+            // Handle network disconnected state
             handler.post { forceUmount(mountPointsList, shell) }
         }
     }
+    
 
     private fun autoMount(mountPointsList: MountPointsList, shell: Shell) {
         Log.d(TAG, "check auto-mount")

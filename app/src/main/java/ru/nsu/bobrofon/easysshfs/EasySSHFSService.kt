@@ -9,7 +9,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.wifi.WifiManager
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -26,7 +26,7 @@ class EasySSHFSService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val internetStateChangeReceiver = InternetStateChangeReceiver(handler)
-    private val internetStateChangeFilter = IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+    private val internetStateChangeFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
 
     private val notification: Notification by lazy {
         NotificationCompat.Builder(applicationContext, CHANNEL_ID).apply {

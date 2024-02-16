@@ -105,7 +105,4 @@ if (signingPropsFile.exists()) {
     android.buildTypes.debug.signingConfig.storePassword = signingProps['DEBUG_STORE_PASSWORD']
     android.buildTypes.debug.signingConfig.keyAlias = signingProps['DEBUG_KEY_ALIAS']
     android.buildTypes.debug.signingConfig.keyPassword = signingProps['DEBUG_KEY_PASSWORD']
-} else {
-    android.buildTypes.release.signingConfig = null
-    android.buildTypes.debug.signingConfig = null
 }

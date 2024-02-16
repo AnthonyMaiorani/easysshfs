@@ -18,13 +18,13 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Assemble release APKs
+      - name: Assemble debug APKs
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: assembleRelease
+          arguments: assembleDebug
           build-root-directory: app
       - name: Upload APKs
         uses: actions/upload-artifact@v3
         with:
           name: apks
-          path: app/build/outputs/apk/release/*.apk
+          path: app/build/outputs/apk/debug/*.apk

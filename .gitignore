@@ -4,3 +4,6 @@
 
 # IDE project files.
 /.vscode/
+/.idea/
+
+.DS_Store
